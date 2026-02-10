@@ -21,24 +21,32 @@
 
 import os
 
+import xacro
 from ament_index_python.packages import get_package_share_directory
 from launch.actions import DeclareLaunchArgument, OpaqueFunction
 from launch.launch_context import LaunchContext
 from launch.launch_description import LaunchDescription
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
-import xacro
 
 
 def spawn_robot(context: LaunchContext, namespace: LaunchConfiguration):
     pkg_project_description = get_package_share_directory("leo_description")
     robot_ns = context.perform_substitution(namespace)
 
+    # robot_desc = xacro.process(
+    #     os.path.join(
+    #         pkg_project_description,
+    #         "urdf",
+    #         "leo_sim.urdf.xacro",
+    #     ),
+    #     mappings={"robot_ns": robot_ns},
+    # )
     robot_desc = xacro.process(
         os.path.join(
-            pkg_project_description,
+            get_package_share_directory("rover_description"),
             "urdf",
-            "leo_sim.urdf.xacro",
+            "rover.urdf.xacro",
         ),
         mappings={"robot_ns": robot_ns},
     )
