@@ -1,5 +1,6 @@
 from functools import partial
 
+import rclpy
 from geometry_msgs.msg import PointStamped, PoseArray
 from rclpy.node import Node
 
@@ -27,6 +28,8 @@ class VisionStub(Node):
         )
 
     def obs_callback(self, msg: PoseArray, color: int):
+        """Converts a pose message from gazebo into a
+        rover_interface-compatible message"""
         obs = BlockPoseObservation()
         obs.position.header.stamp = msg.header.stamp
         obs.position.header.frame_id = msg.header.frame_id
@@ -35,12 +38,27 @@ class VisionStub(Node):
         obs.position.point.y = msg.poses[0].position.y  # type: ignore
         obs.position.point.z = msg.poses[0].position.z  # type: ignore
 
-        obs.shape = BlockShape.CUBE
-        obs.color = color
+        obs.shape.shape = BlockShape.CUBE
+        obs.color.color = color
 
+        self.publisher.publish(obs)
         return None
 
 
+def main():
+    try:
+        rclpy.init()
+        node = VisionStub()
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        pass
+    except Exception as e:
+        print(e)
+
+
+if __name__ == "__main__":
+    main()
+# Pose topics
 # /model/bin_blue_1/pose
 # /model/bin_red_1/pose
 # /model/bin_yellow_1/pose
