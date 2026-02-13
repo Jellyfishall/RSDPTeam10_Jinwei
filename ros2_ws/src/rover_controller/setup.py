@@ -23,7 +23,8 @@ setup(
     },
     entry_points={
         "console_scripts": [
-            "rover_controller = rover_controller.rover_controller:main"
+            "rover_controller = rover_controller.rover_controller:main",
+            "smooth_observations = rover_controller.handle_observations:main",
         ],
     },
 )
