@@ -23,7 +23,7 @@ class VisionStub(Node):
 
         self.publisher = self.create_publisher(
             BlockPoseObservation,
-            topic="observations",
+            topic="cv/block_poses",
             qos_profile=1,
         )
 
