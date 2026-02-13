@@ -4,7 +4,12 @@ import rclpy
 from geometry_msgs.msg import PointStamped, PoseArray
 from rclpy.node import Node
 
-from rover_interface.msg import BlockBinColor, BlockPoseObservation, BlockShape
+from rover_interface.msg import (
+    BinPoseObservation,
+    BlockBinColor,
+    BlockPoseObservation,
+    BlockShape,
+)
 
 # TODO: add publish function for observations
 # TODO: add subs for each block type
@@ -14,35 +19,80 @@ from rover_interface.msg import BlockBinColor, BlockPoseObservation, BlockShape
 class VisionStub(Node):
     def __init__(self):
         super().__init__("vision_stub")
-        self.sub_red_block = self.create_subscription(
-            msg_type=PoseArray,
-            topic="/model/block_red_1/pose",
-            callback=partial(self.obs_callback, color=BlockBinColor.RED),
-            qos_profile=1,
-        )
 
-        self.publisher = self.create_publisher(
+        blockbin_colors = {
+            "red": BlockBinColor.RED,
+            "blue": BlockBinColor.BLUE,
+            "yellow": BlockBinColor.YELLOW,
+        }
+
+        self.subs = []
+        # Build all the pubs and subs
+        for block_str, color in blockbin_colors.items():
+            self.subs.append(
+                self.create_subscription(
+                    msg_type=PoseArray,
+                    topic=f"/model/block_{block_str}_1/pose",
+                    callback=partial(self.block_obs_callback, color=color),
+                    qos_profile=1,
+                )
+            )
+        self.block_publisher = self.create_publisher(
             BlockPoseObservation,
             topic="cv/block_poses",
             qos_profile=1,
         )
 
-    def obs_callback(self, msg: PoseArray, color: int):
-        """Converts a pose message from gazebo into a
-        rover_interface-compatible message"""
-        obs = BlockPoseObservation()
+        for bin_str, color in blockbin_colors.items():
+            self.subs.append(
+                self.create_subscription(
+                    msg_type=PoseArray,
+                    topic=f"/model/bin_{bin_str}_1/pose",
+                    callback=partial(self.bin_obs_callback, color=color),
+                    qos_profile=1,
+                )
+            )
+        self.bin_publisher = self.create_publisher(
+            BinPoseObservation,
+            topic="cv/bin_poses",
+            qos_profile=1,
+        )
+
+    def fill_obs_features[T: BlockPoseObservation | BinPoseObservation](
+        self,
+        obs: T,
+        msg: PoseArray,
+    ) -> T:
+        "Add the header and pose information to an observation message"
         obs.position.header.stamp = msg.header.stamp
         obs.position.header.frame_id = msg.header.frame_id
 
+        # All the objects have their own topics, so
+        # just index into the first element in the array
         obs.position.point.x = msg.poses[0].position.x  # type: ignore
         obs.position.point.y = msg.poses[0].position.y  # type: ignore
         obs.position.point.z = msg.poses[0].position.z  # type: ignore
 
+        return obs
+
+    def block_obs_callback(self, msg: PoseArray, color: int) -> None:
+        """Converts a pose message from gazebo into a
+        rover_interface-compatible message"""
+        obs = BlockPoseObservation()
+        obs = self.fill_obs_features(obs, msg)
         obs.shape.shape = BlockShape.CUBE
         obs.color.color = color
 
-        self.publisher.publish(obs)
-        return None
+        self.block_publisher.publish(obs)
+
+    def bin_obs_callback(self, msg: PoseArray, color: int) -> None:
+        """Converts a pose message from gazebo into a
+        rover_interface-compatible message"""
+        obs = BinPoseObservation()
+        obs = self.fill_obs_features(obs, msg)
+        obs.color.color = color
+
+        self.bin_publisher.publish(obs)
 
 
 def main():
