@@ -1,15 +1,13 @@
 # TODO: implement main controller - it needs to handle
 # transitions ketween states in the main
-
-# question - how are we going to do this? Everywhere the mission
-# plan can halt is basically a state which needs to be maintained
 from enum import Enum, auto
 
+import numpy as np
 import rclpy
 from rclpy.node import Node
-
 from rover_interface.msg import (
     BlockBinColor,
+    BlockPoseObservation,
     BlockPoseSmoothed,
     BlockPoseSmoothedArray,
     BlockShape,
@@ -77,3 +75,18 @@ class ControllerNode(Node):
         ...
         # Tbd whether these happen in the controller or the navigation node
         # ideally should be in nav node
+
+
+def main():
+    try:
+        rclpy.init()
+        node = ControllerNode()
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        pass
+    except Exception as e:
+        print(e)
+
+
+if __name__ == "__main__":
+    main()
