@@ -1,4 +1,5 @@
 from functools import partial
+from random import gauss
 
 import rclpy
 from geometry_msgs.msg import PointStamped, PoseArray
@@ -19,6 +20,17 @@ from rover_interface.msg import (
 class VisionStub(Node):
     def __init__(self):
         super().__init__("vision_stub")
+        self.add_gaussian_noise = bool(
+            self.declare_parameter("add_gaussian_noise", True).value
+        )
+        self.position_noise_stddev_m = float(
+            self.declare_parameter("position_noise_stddev_m", 0.02).value
+        )
+        if self.position_noise_stddev_m < 0.0:
+            self.get_logger().warning(
+                "position_noise_stddev_m was negative; using absolute value."
+            )
+            self.position_noise_stddev_m = abs(self.position_noise_stddev_m)
 
         blockbin_colors = {
             "red": BlockBinColor.RED,
@@ -69,11 +81,22 @@ class VisionStub(Node):
 
         # All the objects have their own topics, so
         # just index into the first element in the array
-        obs.position.point.x = msg.poses[0].position.x  # type: ignore
-        obs.position.point.y = msg.poses[0].position.y  # type: ignore
-        obs.position.point.z = msg.poses[0].position.z  # type: ignore
+        obs.position.point.x = self.apply_noise(  # type: ignore
+            msg.poses[0].position.x
+        )
+        obs.position.point.y = self.apply_noise(  # type: ignore
+            msg.poses[0].position.y
+        )
+        obs.position.point.z = self.apply_noise(  # type: ignore
+            msg.poses[0].position.z
+        )
 
         return obs
+
+    def apply_noise(self, value: float) -> float:
+        if not self.add_gaussian_noise or self.position_noise_stddev_m == 0.0:
+            return value
+        return value + gauss(0.0, self.position_noise_stddev_m)
 
     def block_obs_callback(self, msg: PoseArray, color: int) -> None:
         """Converts a pose message from gazebo into a
