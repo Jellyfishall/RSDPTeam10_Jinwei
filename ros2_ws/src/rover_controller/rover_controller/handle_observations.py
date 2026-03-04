@@ -73,9 +73,8 @@ class AggregateObservations(Node):
             block.shape.shape = BlockShape.CUBE
 
             block.color = BlockBinColor()
-            # Note: You likely want to map the actual stored colors here
+            # TODO(Alex): map the actual stored colors here
             block.color.color = BlockBinColor.RED
-            block.collected = False
 
             msg.blocks.append(block)  # type:ignore
 

@@ -28,7 +28,7 @@ set(interface_files
   "msg/PlatformPoseSmoothedArray.msg"
   "msg/PlatformPoseSmoothed.msg"
   # Actions
-  "actions/NavigateToBlock.action"
+  "action/NavigateToPos.action"
 )
 
 rosidl_generate_interfaces(${PROJECT_NAME}

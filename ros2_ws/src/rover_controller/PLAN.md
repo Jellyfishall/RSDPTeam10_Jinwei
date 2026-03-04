@@ -21,3 +21,14 @@
     2. Current estimates of block positions (and status)
     3. Current estimates of bin positions 
     4. Current phase of controller 
+9. Cut back on some of the spammy logging out of the controller nodes
+
+
+# TODOs in the code 
+
+- What if the navigation fails? Execute one explore step and try again?
+- Tracking collection - the observation smoother doesn't know if something is collected or not. So remove that field, and track it separately in the controller
+- Need to consider robustness to phase jumps. What if the manipulator sets us back to explore?
+
+
+NEXT THING - ADD BIN RECOGNITION TO THE CONTROLLER/SIM STUBS

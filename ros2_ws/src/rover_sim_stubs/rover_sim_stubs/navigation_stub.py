@@ -10,7 +10,8 @@ from rclpy.action import ActionServer, CancelResponse, GoalResponse
 from rclpy.callback_groups import ReentrantCallbackGroup
 from rclpy.executors import MultiThreadedExecutor
 from rclpy.node import Node
-from rover_interface.action import NavigateToBlock
+
+from rover_interface.action import NavigateToPos
 
 
 class NavigationStub(Node):
@@ -57,21 +58,21 @@ class NavigationStub(Node):
 
         self.action_server = ActionServer(
             self,
-            NavigateToBlock,
-            "/navigate_to_block",
+            NavigateToPos,
+            "/navigate_to_pos",
             execute_callback=self.execute_callback,
             goal_callback=self.goal_callback,
             cancel_callback=self.cancel_callback,
         )
 
         self.get_logger().info(
-            f"Navigation stub ready on /navigate_to_block "
+            f"Navigation stub ready on /navigate_to_pos "
             f"(approach_threshold_m={self.approach_threshold_m:.2f})"
         )
 
-    def goal_callback(self, goal_request: NavigateToBlock.Goal):
-        frame_id = goal_request.target_block.position.header.frame_id.strip()
-        target = goal_request.target_block.position.point
+    def goal_callback(self, goal_request: NavigateToPos.Goal):
+        frame_id = goal_request.target_pos.header.frame_id.strip()
+        target = goal_request.target_pos.point
 
         if frame_id and frame_id != "odom":
             self.get_logger().warn(
@@ -91,17 +92,16 @@ class NavigationStub(Node):
         return CancelResponse.ACCEPT
 
     def execute_callback(self, goal_handle):
-        target = goal_handle.request.target_block.position.point
+        target = goal_handle.request.target_pos.point
         target_x = float(target.x)
         target_y = float(target.y)
 
         self.get_logger().info(
-            f"Executing navigate goal to block id={goal_handle.request.target_block.id} "
-            f"at ({target_x:.3f}, {target_y:.3f})"
+            f"Executing navigate goal to target at ({target_x:.3f}, {target_y:.3f})"
         )
 
-        result = NavigateToBlock.Result()
-        feedback = NavigateToBlock.Feedback()
+        result = NavigateToPos.Result()
+        feedback = NavigateToPos.Feedback()
         start_time = self.get_clock().now()
 
         while rclpy.ok():

@@ -1,5 +1,5 @@
 # Target block pose (provided by controller)
-rover_interface/BlockPoseSmoothed target_block
+geometry_msgs/PointStamped target_pos
 ---
 # Whether the rover reached the approach threshold
 bool success
