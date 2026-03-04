@@ -13,8 +13,12 @@
   <test_depend>python3-pytest</test_depend>
 
   <exec_depend>python-numpy</exec_depend>
+  <depend>launch</depend>
+  <depend>launch_ros</depend>
   <depend>rclpy</depend>
+  <depend>rover_gz_bringup</depend>
   <depend>rover_interface</depend>
+  <depend>rover_sim_stubs</depend>
   <export>
     <build_type>ament_python</build_type>
   </export>

@@ -28,5 +28,13 @@ To run the sim, you need to export a shell variable so ROS knows where to find t
 
 You can then run the simulator using 
 ```bash
-> ros2 launch leo_gz_bringup leo_gz.launch.py sim_world:=pick_place_arena.sdf
+> ros2 launch rover_controller launch_sim.py
 ```
+
+The sim exposes stub modules which do basic actions - like a vision stub which generates noisy observations by directly reading the Gazebo positions. You can disable specific stubs as follows.
+
+```bash
+> ros2 launch rover_controller launch_sim.py run_vision_stub:=false run_navigation_stub:=false run_smooth_observations:=false run_rover_controller:=false
+```
+
+Check the launch file for the full list of launch arguments.
