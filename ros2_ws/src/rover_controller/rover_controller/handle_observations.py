@@ -28,7 +28,7 @@ class AggregateObservations(Node):
             f"{self.block_dist_threshold_m:.2f}m"
         )
         self.bin_dist_threshold_m = self.declare_parameter(
-            "bin_dist_threshold_m", 0.5
+            "bin_dist_threshold_m", 0.2
         ).value
         self.get_logger().info(
             f"Setting bin disambiguation distance threshold to "
@@ -106,8 +106,7 @@ class AggregateObservations(Node):
             block.shape.shape = BlockShape.CUBE
 
             block.color = BlockBinColor()
-            # TODO(Alex): map the actual stored colors here
-            block.color.color = BlockBinColor.RED
+            block.color.color = self.block_colors[i].color
 
             msg.blocks.append(block)  # type:ignore
 
