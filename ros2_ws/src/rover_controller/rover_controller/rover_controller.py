@@ -99,6 +99,18 @@ class ControllerNode(Node):
         )
         self.nav_goal_in_flight = False
 
+        manip_action_topic = "/manipulate_block"
+        self.get_logger().info(
+            f"Connecting to manipulation action server {manip_action_topic=}"
+        )
+        self.manip_action_client = ActionClient(
+            self,
+            ManipulateBlock,
+            manip_action_topic,
+        )
+        self.manip_goal_in_flight = False
+        self.manip_goal_operation: int | None = None
+
         # Spin main controller loop
         controller_period = 0.1
         self.main_loop_timer = self.create_timer(controller_period, callback=self.loop)
@@ -281,19 +293,17 @@ class ControllerNode(Node):
 
     # ------------------------ MANIPULATION -----------------------------------------
     def grasp_block(self, target_block: BlockPoseSmoothed | None):
-        # basic fake logic - mark the target_block acquired, set phase
-        # to ApproachBin.
-        # TODO(Alex): Add proper action server
         if target_block is None:
             self.get_logger().warn(f"Received invalid {target_block=}")
             self.state = Phase.Explore.EXPLORE
             return
 
-        self.collected.add(target_block.id)
         color = target_block.color
-        self.get_logger().info(f"Grasping block with color: {color_to_str(color)}")
-        self.get_logger().info(f"Adding target block to {self.collected=}")
-        self.state = Phase.ApproachBin.PROPOSE_NAV_POSE
+        self.send_manipulation_goal(
+            operation=ManipulateBlock.Goal.GRASP,
+            target=target_block,
+            description=f"Grasping block with color: {color_to_str(color)}",
+        )
 
     def select_target_bin(self, target_block: BlockPoseSmoothed | None):
         # TODO(Alex): Remove this assert
@@ -317,18 +327,129 @@ class ControllerNode(Node):
         )
 
     def deposit_block(self):
-        self.get_logger().info(
-            f"Depositing {color_to_str(self.target_block.color)} block in {color_to_str(self.target_bin.color)} bin"  # type: ignore
-        )
-        self.target_block = None
-        self.target_bin = None
-
-        # if we have successfully collected 3 blocks, terminate the mission,
-        # or return to the exploration phase to find more
-        if len(self.collected) < 3:
+        if self.target_block is None or self.target_bin is None:
+            self.get_logger().warn(
+                "Cannot deposit without both a target block and target bin."
+            )
             self.state = Phase.Explore.EXPLORE
-        else:
-            self.state = Phase.PostDeposit.TERMINATE
+            return
+
+        self.send_manipulation_goal(
+            operation=ManipulateBlock.Goal.DEPOSIT,
+            target=self.target_bin,
+            description=(
+                f"Depositing {color_to_str(self.target_block.color)} block in "
+                f"{color_to_str(self.target_bin.color)} bin"
+            ),
+        )
+
+    def send_manipulation_goal(
+        self,
+        operation: int,
+        target: BlockPoseSmoothed | BinPoseSmoothed | None,
+        description: str,
+    ) -> bool:
+        if self.manip_goal_in_flight or (target is None):
+            return False
+
+        if not self.manip_action_client.wait_for_server(timeout_sec=0.5):
+            self.get_logger().warn(
+                "Manipulation action server '/manipulate_block' is not available."
+            )
+            return False
+
+        goal = ManipulateBlock.Goal()
+        goal.operation = operation
+        goal.target_pos = target.position
+
+        self.manip_goal_in_flight = True
+        self.manip_goal_operation = operation
+        self.get_logger().info(
+            f"{description} at "
+            f"({target.position.point.x:.2f}, {target.position.point.y:.2f})"
+        )
+
+        goal_future = self.manip_action_client.send_goal_async(
+            goal,
+            feedback_callback=self._manip_feedback_callback,
+        )
+        goal_future.add_done_callback(self._manip_goal_response_callback)
+        return True
+
+    def _manip_feedback_callback(self, feedback_msg):
+        stage = feedback_msg.feedback.current_stage
+        # self.get_logger().info(f"Manipulation feedback: current_stage='{stage}'")
+
+    def _manip_goal_response_callback(self, future):
+        goal_handle = future.result()
+        if goal_handle is None or not goal_handle.accepted:
+            self.get_logger().error("Manipulation goal was rejected.")
+            self._handle_manipulation_result(success=False, message="Goal rejected.")
+            return
+
+        self.get_logger().info("Manipulation goal accepted.")
+        result_future = goal_handle.get_result_async()
+        result_future.add_done_callback(self._manip_result_callback)
+
+    def _manip_result_callback(self, future):
+        result = future.result().result
+        status = "SUCCESS" if result.success else "FAILURE"
+        self.get_logger().info(
+            f"Manipulation result {status}: message='{result.message}'"
+        )
+        self._handle_manipulation_result(
+            success=result.success, message=result.message
+        )
+
+    def _handle_manipulation_result(self, success: bool, message: str):
+        operation = self.manip_goal_operation
+        self.manip_goal_in_flight = False
+        self.manip_goal_operation = None
+
+        if operation == ManipulateBlock.Goal.GRASP:
+            if success:
+                if self.target_block is None:
+                    self.get_logger().warn(
+                        "Grasp reported success but there is no target block."
+                    )
+                    self.state = Phase.Explore.EXPLORE
+                    return
+
+                self.collected.add(self.target_block.id)
+                self.get_logger().info(f"Adding target block to {self.collected=}")
+                self.state = Phase.ApproachBin.PROPOSE_NAV_POSE
+                return
+
+            self.get_logger().warning(
+                f"Grasp failed with message '{message}'. Re-approaching block."
+            )
+            self.state = Phase.ApproachBlock.EXECUTE_NAV
+            return
+
+        if operation == ManipulateBlock.Goal.DEPOSIT:
+            if success:
+                self.target_block = None
+                self.target_bin = None
+
+                # if we have successfully collected 3 blocks, terminate the mission,
+                # or return to the exploration phase to find more
+                if len(self.collected) < 3:
+                    self.state = Phase.Explore.EXPLORE
+                else:
+                    self.state = Phase.PostDeposit.TERMINATE
+                return
+
+            self.get_logger().warning(
+                f"Deposit failed with message '{message}'. Re-approaching bin."
+            )
+            self.state = Phase.ApproachBin.EXECUTE_NAV
+            return
+
+        self.get_logger().warn(
+            f"Manipulation completed with unknown operation {operation=}; "
+            f"returning to explore."
+        )
+        self.state = Phase.Explore.EXPLORE
 
 
 def main():

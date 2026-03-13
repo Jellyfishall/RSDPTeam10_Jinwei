@@ -4,7 +4,7 @@
     1. Rotate on startup (how coordinate with nav stub? Could send cmd_vel direct)
     2. Explore action 
     3. Handle action-in-flight checks - will get quite flabby...
-    4. Manipulator 
+    ~4. Manipulator~ 
     ~5. Return to bin - should be easy~
     ~6. Continue~
 2. Manipulator stub
@@ -36,4 +36,4 @@
 NEXT: Set up tf transforms properly so that the fake vision observations are occuring in the map frame. We will want to properly handle observations in the camera frame.
 
 - Q - is it time to start working on the visualisation setup in rviz?
-- IDEA - if the smoothing node finds a new node far from an old one with the same colour as another one, overwrite it - can handle the SLAM drift
+- IDEA - if the smoothing node finds a new node far from an old one with the same colour as another one, overwrite it - may be able handle the SLAM drift
