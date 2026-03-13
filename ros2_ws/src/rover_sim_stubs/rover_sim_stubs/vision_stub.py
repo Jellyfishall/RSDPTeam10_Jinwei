@@ -21,6 +21,9 @@ class VisionStub(Node):
     def __init__(self):
         super().__init__("vision_stub")
         self.get_logger().info("Launching vision stub")
+        self.observation_frame_id = str(
+            self.declare_parameter("observation_frame_id", "map").value
+        )
         self.add_gaussian_noise = bool(
             self.declare_parameter("add_gaussian_noise", True).value
         )
@@ -84,7 +87,7 @@ class VisionStub(Node):
     ) -> T:
         "Add the header and pose information to an observation message"
         obs.position.header.stamp = msg.header.stamp
-        obs.position.header.frame_id = msg.header.frame_id
+        obs.position.header.frame_id = self.observation_frame_id
 
         # All the objects have their own topics, so
         # just index into the first element in the array

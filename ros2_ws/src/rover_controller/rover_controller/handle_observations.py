@@ -47,6 +47,7 @@ class AggregateObservations(Node):
 
         self.block_poses: np.ndarray | None = None
         self.block_colors: list[BlockBinColor] = []
+        self.block_frame_id = "map"
 
         self.block_pub_topic = "/controller/block_poses"
         self.block_pub = self.create_publisher(
@@ -66,6 +67,7 @@ class AggregateObservations(Node):
         )
         self.bin_poses: np.ndarray | None = None
         self.bin_colors: list[BlockBinColor] = []
+        self.bin_frame_id = "map"
 
         self.bin_pub_topic = "/controller/bin_poses"
         self.bin_pub = self.create_publisher(
@@ -96,7 +98,7 @@ class AggregateObservations(Node):
 
             pose = self.block_poses[i]
             block.position = PointStamped()
-            block.position.header.frame_id = "odom"
+            block.position.header.frame_id = self.block_frame_id
             block.position.header.stamp = self.get_clock().now().to_msg()
             block.position.point = Point(x=pose[0], y=pose[1], z=pose[2])
 
@@ -116,6 +118,7 @@ class AggregateObservations(Node):
         return 0.95 * current + 0.05 * new
 
     def observe_block(self, msg: BlockPoseObservation):
+        self.block_frame_id = msg.position.header.frame_id or self.block_frame_id
         pos = np.array(
             [msg.position.point.x, msg.position.point.y, msg.position.point.z]
         )
@@ -153,7 +156,7 @@ class AggregateObservations(Node):
 
             pose = self.bin_poses[i]
             bin_pose.position = PointStamped()
-            bin_pose.position.header.frame_id = "odom"
+            bin_pose.position.header.frame_id = self.bin_frame_id
             bin_pose.position.header.stamp = self.get_clock().now().to_msg()
             bin_pose.position.point = Point(x=pose[0], y=pose[1], z=pose[2])
 
@@ -165,6 +168,7 @@ class AggregateObservations(Node):
         self.bin_pub.publish(msg=msg)
 
     def observe_bin(self, msg: BinPoseObservation):
+        self.bin_frame_id = msg.position.header.frame_id or self.bin_frame_id
         pos = np.array(
             [msg.position.point.x, msg.position.point.y, msg.position.point.z]
         )

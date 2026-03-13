@@ -29,7 +29,11 @@
 
 - What if the navigation fails? Execute one explore step and try again?
 - Tracking collection - the observation smoother doesn't know if something is collected or not. So remove that field, and track it separately in the controller
-- Need to consider robustness to phase jumps. What if the manipulator sets us back to explore?
+- Need to consider robustness to state changes from different positions in the FSM. What if the manipulator sets us back to explore?
+- When we run the longer-term policy, the rover ends up in the wrong location. Is that because, even in sim, /odom drifts? Or what else could be going on? How could I visualise it? What are the positions relative to? Would this be a problem if I'm maintaining things in the map frame?
 
+NEXT: Set up tf transforms properly so that the fake vision observations are occuring in the map frame. We will want to properly handle observations in the camera frame.
 
-NEXT THING - ADD BIN RECOGNITION TO THE CONTROLLER/SIM STUBS
+- BUG - It thinks everything is red 
+- BUG - Not realising it's collected blocks correctly
+- Q - is it time to start working on the visualisation setup in rviz?

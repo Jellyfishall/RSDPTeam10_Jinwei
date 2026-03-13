@@ -81,11 +81,15 @@ def generate_launch_description():
             "/model/platform_red/pose@geometry_msgs/msg/PoseArray[gz.msgs.Pose_V",
             "/model/platform_blue/pose@geometry_msgs/msg/PoseArray[gz.msgs.Pose_V",
             "/model/platform_yellow/pose@geometry_msgs/msg/PoseArray[gz.msgs.Pose_V",
+            "/model/leo_rover/pose@geometry_msgs/msg/PoseArray[gz.msgs.Pose_V",
         ],
         parameters=[
             {
                 "qos_overrides./tf_static.publisher.durability": "transient_local",
             }
+        ],
+        remappings=[
+            ("/model/leo_rover/pose", "/sim/rover_pose"),
         ],
         output="screen",
     )

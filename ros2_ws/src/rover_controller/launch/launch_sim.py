@@ -39,6 +39,11 @@ def generate_launch_description():
         default_value="true",
         description="Run rover_controller node",
     )
+    run_nav_debug_overlay_arg = DeclareLaunchArgument(
+        "run_nav_debug_overlay",
+        default_value="false",
+        description="Run rover_sim_stubs nav_debug_overlay node",
+    )
 
     vision_stub = Node(
         package="rover_sim_stubs",
@@ -68,16 +73,25 @@ def generate_launch_description():
         condition=IfCondition(LaunchConfiguration("run_rover_controller")),
     )
 
+    nav_debug_overlay = Node(
+        package="rover_sim_stubs",
+        executable="nav_debug_overlay",
+        output="screen",
+        condition=IfCondition(LaunchConfiguration("run_nav_debug_overlay")),
+    )
+
     return LaunchDescription(
         [
             run_vision_stub_arg,
             run_navigation_stub_arg,
             run_smooth_observations_arg,
             run_rover_controller_arg,
+            run_nav_debug_overlay_arg,
             rover_sim,
             vision_stub,
             navigation_stub,
             smooth_observations,
             rover_controller,
+            nav_debug_overlay,
         ]
     )
