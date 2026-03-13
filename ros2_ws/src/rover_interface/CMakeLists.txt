@@ -28,6 +28,7 @@ set(interface_files
   "msg/PlatformPoseSmoothedArray.msg"
   "msg/PlatformPoseSmoothed.msg"
   # Actions
+  "action/ManipulateBlock.action"
   "action/NavigateToPos.action"
 )
 

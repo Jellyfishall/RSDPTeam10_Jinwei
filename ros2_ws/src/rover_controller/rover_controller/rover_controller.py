@@ -4,7 +4,7 @@ import rclpy
 from rclpy.action.client import ActionClient
 from rclpy.node import Node
 
-from rover_interface.action import NavigateToPos
+from rover_interface.action import ManipulateBlock, NavigateToPos
 from rover_interface.msg import (
     BinPoseSmoothed,
     BinPoseSmoothedArray,
