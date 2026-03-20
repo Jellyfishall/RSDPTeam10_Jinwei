@@ -35,6 +35,20 @@ from rover_interface.msg import (
 
 # Suppress some torch warning spam
 warnings.simplefilter(action="ignore", category=FutureWarning)
+# -------------------- shared colour enum helpers --------------------
+
+COLOR_NAME_TO_ID = {
+    "blue": 0,
+    "red": 1,
+    "yellow": 2,
+    "purple": 3,
+    "pink": 4,
+    "green": 5,
+}
+
+COLOR_UNKNOWN = 255
+
+
 # -------------------- image decode (no cv_bridge) --------------------
 
 
@@ -473,6 +487,11 @@ class PerceptionStableAttrsNode(Node):
             return self.names.get(cls_id, str(cls_id))
         return self.names[cls_id]
 
+    def _color_to_enum(self, label: Optional[str]) -> int:
+        if label is None:
+            return COLOR_UNKNOWN
+        return int(COLOR_NAME_TO_ID.get(label.strip().lower(), COLOR_UNKNOWN))
+
     def cb(self, color_msg: Image, depth_msg: Image, info_msg: CameraInfo):
         self.frame_count += 1
 
@@ -741,7 +760,7 @@ class PerceptionStableAttrsNode(Node):
                 obj.missed = int(tr.missed)
                 obj.center_u = int(tr.last_center_px[0])
                 obj.center_v = int(tr.last_center_px[1])
-                obj.color_label = "" if blk_color is None else blk_color
+                obj.color = self._color_to_enum(blk_color)
                 obj.color_confidence = 0.0 if blk_cconf is None else float(blk_cconf)
                 obj.color_votes = int(blk_cn)
                 obj.shape_label = "" if blk_shape is None else blk_shape
@@ -758,7 +777,7 @@ class PerceptionStableAttrsNode(Node):
                 obj.missed = int(tr.missed)
                 obj.center_u = int(tr.last_center_px[0])
                 obj.center_v = int(tr.last_center_px[1])
-                obj.color_label = "" if bin_color is None else bin_color
+                obj.color = self._color_to_enum(bin_color)
                 obj.color_confidence = 0.0 if bin_cconf is None else float(bin_cconf)
                 obj.color_votes = int(bin_n)
                 bin_msg.observations.append(obj)
@@ -860,3 +879,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

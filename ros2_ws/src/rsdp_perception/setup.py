@@ -47,8 +47,8 @@ setup(
     },
     entry_points={
         "console_scripts": [
-            "yolov5_realsense_node = rsdp_perception.yolov5_realsense_node:main",
-            "vision_node = rsdp_perception.perception_typed_node:main",
+            "monitor_node = rsdp_perception.monitor:main",
+            "vision_node = rsdp_perception.perception:main",
         ],
     },
 )

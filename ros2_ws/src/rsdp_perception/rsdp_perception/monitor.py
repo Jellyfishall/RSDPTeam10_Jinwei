@@ -10,6 +10,17 @@ from rover_interface.msg import (
 )
 
 
+COLOR_NAMES = {
+    0: "BLUE",
+    1: "RED",
+    2: "YELLOW",
+    3: "PURPLE",
+    4: "PINK",
+    5: "GREEN",
+    255: "UNKNOWN",
+}
+
+
 class TracksMonitorTyped(Node):
     def __init__(self):
         super().__init__("rsdp_tracks_monitor_typed")
@@ -21,13 +32,16 @@ class TracksMonitorTyped(Node):
 
         self.get_logger().info("Listening to /cv/block_poses /cv/bin_poses /cv/platform_poses /cv/bin_opening_poses ...")
 
+    def _color_name(self, color_id: int) -> str:
+        return COLOR_NAMES.get(int(color_id), f"UNKNOWN({int(color_id)})")
+
     def cb_blocks(self, msg: BlockPoseObservation):
         lines = [f"BLOCKS frame={msg.header.frame_id} fps={msg.yolo_fps:.2f} n={len(msg.observations)}"]
         for o in msg.observations:
             lines.append(
                 f"  id={o.id:>2} conf={o.confidence:.3f} "
                 f"xyz=({o.pose.position.x:.4f},{o.pose.position.y:.4f},{o.pose.position.z:.4f}) "
-                f"color={o.color_label}({o.color_confidence:.2f},v={o.color_votes}) "
+                f"color={o.color}[{self._color_name(o.color)}]({o.color_confidence:.2f},v={o.color_votes}) "
                 f"shape={o.shape_label}({o.shape_confidence:.2f},v={o.shape_votes}) "
                 f"missed={o.missed}"
             )
@@ -39,7 +53,7 @@ class TracksMonitorTyped(Node):
             lines.append(
                 f"  id={o.id:>2} conf={o.confidence:.3f} "
                 f"xyz=({o.pose.position.x:.4f},{o.pose.position.y:.4f},{o.pose.position.z:.4f}) "
-                f"color={o.color_label}({o.color_confidence:.2f},v={o.color_votes}) "
+                f"color={o.color}[{self._color_name(o.color)}]({o.color_confidence:.2f},v={o.color_votes}) "
                 f"missed={o.missed}"
             )
         self.get_logger().info("\n" + "\n".join(lines))
