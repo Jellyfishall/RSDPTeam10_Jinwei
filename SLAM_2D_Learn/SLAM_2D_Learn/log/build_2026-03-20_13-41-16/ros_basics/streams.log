@@ -1,0 +1,21 @@
+[1.613s] Invoking command in '/home/yht/SLAM_2D_Learn/SLAM_2D_Learn/src/ros_basics': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/ros_basics/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/ros_basics/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/ros_basics build --build-base /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/ros_basics/build install --record /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/ros_basics/install.log --single-version-externally-managed install_data
+[1.917s] running egg_info
+[1.938s] writing ../../build/ros_basics/ros_basics.egg-info/PKG-INFO
+[1.938s] writing dependency_links to ../../build/ros_basics/ros_basics.egg-info/dependency_links.txt
+[1.939s] writing entry points to ../../build/ros_basics/ros_basics.egg-info/entry_points.txt
+[1.939s] writing requirements to ../../build/ros_basics/ros_basics.egg-info/requires.txt
+[1.939s] writing top-level names to ../../build/ros_basics/ros_basics.egg-info/top_level.txt
+[1.983s] reading manifest file '../../build/ros_basics/ros_basics.egg-info/SOURCES.txt'
+[1.983s] writing manifest file '../../build/ros_basics/ros_basics.egg-info/SOURCES.txt'
+[1.983s] running build
+[1.983s] running build_py
+[1.983s] running install
+[1.990s] running install_lib
+[2.012s] running install_data
+[2.013s] running install_egg_info
+[2.036s] removing '/home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/ros_basics/lib/python3.12/site-packages/ros_basics-0.0.0-py3.12.egg-info' (and everything under it)
+[2.036s] Copying ../../build/ros_basics/ros_basics.egg-info to /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/ros_basics/lib/python3.12/site-packages/ros_basics-0.0.0-py3.12.egg-info
+[2.037s] running install_scripts
+[2.181s] Installing move_robot_node script to /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/ros_basics/lib/ros_basics
+[2.181s] writing list of installed files to '/home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/ros_basics/install.log'
+[2.218s] Invoked command in '/home/yht/SLAM_2D_Learn/SLAM_2D_Learn/src/ros_basics' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/ros_basics/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/ros_basics/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/ros_basics build --build-base /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/ros_basics/build install --record /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/ros_basics/install.log --single-version-externally-managed install_data

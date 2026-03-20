@@ -1,0 +1,2 @@
+[console_scripts]
+move_robot_node = ros_basics.move_robot:main

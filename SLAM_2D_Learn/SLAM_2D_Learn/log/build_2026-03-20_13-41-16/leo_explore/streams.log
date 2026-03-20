@@ -1,0 +1,24 @@
+[1.633s] Invoking command in '/home/yht/SLAM_2D_Learn/SLAM_2D_Learn/src/leo_explore': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/leo_explore/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/leo_explore/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/leo_explore build --build-base /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/leo_explore/build install --record /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/leo_explore/install.log --single-version-externally-managed install_data
+[1.933s] running egg_info
+[1.955s] writing ../../build/leo_explore/leo_explore.egg-info/PKG-INFO
+[1.955s] writing dependency_links to ../../build/leo_explore/leo_explore.egg-info/dependency_links.txt
+[1.955s] writing entry points to ../../build/leo_explore/leo_explore.egg-info/entry_points.txt
+[1.955s] writing requirements to ../../build/leo_explore/leo_explore.egg-info/requires.txt
+[1.955s] writing top-level names to ../../build/leo_explore/leo_explore.egg-info/top_level.txt
+[1.998s] reading manifest file '../../build/leo_explore/leo_explore.egg-info/SOURCES.txt'
+[1.999s] writing manifest file '../../build/leo_explore/leo_explore.egg-info/SOURCES.txt'
+[1.999s] running build
+[1.999s] running build_py
+[2.000s] copying leo_explore/wander.py -> /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/leo_explore/build/lib/leo_explore
+[2.000s] running install
+[2.007s] running install_lib
+[2.028s] copying /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/leo_explore/build/lib/leo_explore/wander.py -> /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/leo_explore/lib/python3.12/site-packages/leo_explore
+[2.029s] byte-compiling /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/leo_explore/lib/python3.12/site-packages/leo_explore/wander.py to wander.cpython-312.pyc
+[2.031s] running install_data
+[2.031s] running install_egg_info
+[2.054s] removing '/home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/leo_explore/lib/python3.12/site-packages/leo_explore-0.0.0-py3.12.egg-info' (and everything under it)
+[2.054s] Copying ../../build/leo_explore/leo_explore.egg-info to /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/leo_explore/lib/python3.12/site-packages/leo_explore-0.0.0-py3.12.egg-info
+[2.055s] running install_scripts
+[2.198s] Installing wander script to /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/leo_explore/lib/leo_explore
+[2.199s] writing list of installed files to '/home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/leo_explore/install.log'
+[2.229s] Invoked command in '/home/yht/SLAM_2D_Learn/SLAM_2D_Learn/src/leo_explore' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/leo_explore/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/leo_explore/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/leo_explore build --build-base /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/leo_explore/build install --record /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/leo_explore/install.log --single-version-externally-managed install_data

@@ -1,0 +1,17 @@
+package.xml
+setup.cfg
+setup.py
+../../build/ros_basics/ros_basics.egg-info/PKG-INFO
+../../build/ros_basics/ros_basics.egg-info/SOURCES.txt
+../../build/ros_basics/ros_basics.egg-info/dependency_links.txt
+../../build/ros_basics/ros_basics.egg-info/entry_points.txt
+../../build/ros_basics/ros_basics.egg-info/requires.txt
+../../build/ros_basics/ros_basics.egg-info/top_level.txt
+../../build/ros_basics/ros_basics.egg-info/zip-safe
+launch/robot_move.launch.py
+resource/ros_basics
+ros_basics/__init__.py
+ros_basics/move_robot.py
+test/test_copyright.py
+test/test_flake8.py
+test/test_pep257.py

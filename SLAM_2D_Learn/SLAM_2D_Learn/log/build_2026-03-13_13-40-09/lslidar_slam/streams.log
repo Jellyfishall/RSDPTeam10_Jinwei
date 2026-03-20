@@ -1,0 +1,41 @@
+[1.663s] Invoking command in '/home/yht/SLAM_2D_Learn/SLAM_2D_Learn/src/Lslidar_ROS2_main/lslidar_slam': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/lslidar_slam/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_slam/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../../build/lslidar_slam build --build-base /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/lslidar_slam/build install --record /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/lslidar_slam/install.log --single-version-externally-managed install_data
+[1.965s] running egg_info
+[1.965s] creating ../../../build/lslidar_slam/lslidar_slam.egg-info
+[1.987s] writing ../../../build/lslidar_slam/lslidar_slam.egg-info/PKG-INFO
+[1.987s] writing dependency_links to ../../../build/lslidar_slam/lslidar_slam.egg-info/dependency_links.txt
+[1.987s] writing requirements to ../../../build/lslidar_slam/lslidar_slam.egg-info/requires.txt
+[1.988s] writing top-level names to ../../../build/lslidar_slam/lslidar_slam.egg-info/top_level.txt
+[1.988s] writing manifest file '../../../build/lslidar_slam/lslidar_slam.egg-info/SOURCES.txt'
+[2.029s] reading manifest file '../../../build/lslidar_slam/lslidar_slam.egg-info/SOURCES.txt'
+[2.031s] writing manifest file '../../../build/lslidar_slam/lslidar_slam.egg-info/SOURCES.txt'
+[2.031s] running build
+[2.031s] running build_py
+[2.031s] creating /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/lslidar_slam/build
+[2.031s] creating /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/lslidar_slam/build/lib
+[2.031s] creating /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/lslidar_slam/build/lib/lslidar_slam
+[2.031s] copying lslidar_slam/__init__.py -> /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/lslidar_slam/build/lib/lslidar_slam
+[2.032s] running install
+[2.037s] running install_lib
+[2.059s] creating /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_slam/lib/python3.12/site-packages/lslidar_slam
+[2.060s] copying /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/lslidar_slam/build/lib/lslidar_slam/__init__.py -> /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_slam/lib/python3.12/site-packages/lslidar_slam
+[2.060s] byte-compiling /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_slam/lib/python3.12/site-packages/lslidar_slam/__init__.py to __init__.cpython-312.pyc
+[2.060s] running install_data
+[2.060s] creating /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_slam/share/ament_index
+[2.060s] creating /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_slam/share/ament_index/resource_index
+[2.060s] creating /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_slam/share/ament_index/resource_index/packages
+[2.060s] copying resource/lslidar_slam -> /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_slam/share/ament_index/resource_index/packages
+[2.060s] copying package.xml -> /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_slam/share/lslidar_slam
+[2.060s] creating /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_slam/share/lslidar_slam/launch
+[2.061s] copying launch/lslidar_slam_tf.py -> /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_slam/share/lslidar_slam/launch
+[2.061s] copying launch/lslidar_slam_launch.py -> /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_slam/share/lslidar_slam/launch
+[2.061s] copying launch/lslidar_slam_slam.py -> /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_slam/share/lslidar_slam/launch
+[2.061s] copying launch/lslidar_slam_rviz.py -> /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_slam/share/lslidar_slam/launch
+[2.062s] copying launch/lslidar_slam_laser.py -> /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_slam/share/lslidar_slam/launch
+[2.062s] creating /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_slam/share/lslidar_slam/config
+[2.062s] copying config/slam_toolbox_rviz.rviz -> /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_slam/share/lslidar_slam/config
+[2.062s] copying config/slam_config.yaml -> /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_slam/share/lslidar_slam/config
+[2.062s] running install_egg_info
+[2.084s] Copying ../../../build/lslidar_slam/lslidar_slam.egg-info to /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_slam/lib/python3.12/site-packages/lslidar_slam-0.0.0-py3.12.egg-info
+[2.085s] running install_scripts
+[2.229s] writing list of installed files to '/home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/lslidar_slam/install.log'
+[2.262s] Invoked command in '/home/yht/SLAM_2D_Learn/SLAM_2D_Learn/src/Lslidar_ROS2_main/lslidar_slam' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/lslidar_slam/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_slam/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../../build/lslidar_slam build --build-base /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/lslidar_slam/build install --record /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/lslidar_slam/install.log --single-version-externally-managed install_data

@@ -1,0 +1,46 @@
+[1.671s] Invoking command in '/home/yht/SLAM_2D_Learn/SLAM_2D_Learn/src/Lslidar_ROS2_main/lslidar_catorgrapher': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/lslidar_catorgrapher/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_catorgrapher/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../../build/lslidar_catorgrapher build --build-base /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/lslidar_catorgrapher/build install --record /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/lslidar_catorgrapher/install.log --single-version-externally-managed install_data
+[1.971s] running egg_info
+[1.972s] creating ../../../build/lslidar_catorgrapher/lslidar_catorgrapher.egg-info
+[1.993s] writing ../../../build/lslidar_catorgrapher/lslidar_catorgrapher.egg-info/PKG-INFO
+[1.994s] writing dependency_links to ../../../build/lslidar_catorgrapher/lslidar_catorgrapher.egg-info/dependency_links.txt
+[1.994s] writing requirements to ../../../build/lslidar_catorgrapher/lslidar_catorgrapher.egg-info/requires.txt
+[1.994s] writing top-level names to ../../../build/lslidar_catorgrapher/lslidar_catorgrapher.egg-info/top_level.txt
+[1.994s] writing manifest file '../../../build/lslidar_catorgrapher/lslidar_catorgrapher.egg-info/SOURCES.txt'
+[2.035s] reading manifest file '../../../build/lslidar_catorgrapher/lslidar_catorgrapher.egg-info/SOURCES.txt'
+[2.036s] writing manifest file '../../../build/lslidar_catorgrapher/lslidar_catorgrapher.egg-info/SOURCES.txt'
+[2.036s] running build
+[2.036s] running build_py
+[2.036s] creating /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/lslidar_catorgrapher/build
+[2.037s] creating /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/lslidar_catorgrapher/build/lib
+[2.037s] creating /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/lslidar_catorgrapher/build/lib/lslidar_catorgrapher
+[2.037s] copying lslidar_catorgrapher/check_block.py -> /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/lslidar_catorgrapher/build/lib/lslidar_catorgrapher
+[2.037s] copying lslidar_catorgrapher/read_map_pos.py -> /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/lslidar_catorgrapher/build/lib/lslidar_catorgrapher
+[2.038s] copying lslidar_catorgrapher/__init__.py -> /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/lslidar_catorgrapher/build/lib/lslidar_catorgrapher
+[2.038s] running install
+[2.043s] running install_lib
+[2.065s] creating /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_catorgrapher/lib/python3.12/site-packages/lslidar_catorgrapher
+[2.065s] copying /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/lslidar_catorgrapher/build/lib/lslidar_catorgrapher/check_block.py -> /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_catorgrapher/lib/python3.12/site-packages/lslidar_catorgrapher
+[2.065s] copying /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/lslidar_catorgrapher/build/lib/lslidar_catorgrapher/read_map_pos.py -> /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_catorgrapher/lib/python3.12/site-packages/lslidar_catorgrapher
+[2.065s] copying /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/lslidar_catorgrapher/build/lib/lslidar_catorgrapher/__init__.py -> /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_catorgrapher/lib/python3.12/site-packages/lslidar_catorgrapher
+[2.066s] byte-compiling /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_catorgrapher/lib/python3.12/site-packages/lslidar_catorgrapher/check_block.py to check_block.cpython-312.pyc
+[2.067s] byte-compiling /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_catorgrapher/lib/python3.12/site-packages/lslidar_catorgrapher/read_map_pos.py to read_map_pos.cpython-312.pyc
+[2.067s] byte-compiling /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_catorgrapher/lib/python3.12/site-packages/lslidar_catorgrapher/__init__.py to __init__.cpython-312.pyc
+[2.068s] running install_data
+[2.068s] creating /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_catorgrapher/share/ament_index
+[2.068s] creating /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_catorgrapher/share/ament_index/resource_index
+[2.068s] creating /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_catorgrapher/share/ament_index/resource_index/packages
+[2.068s] copying resource/lslidar_catorgrapher -> /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_catorgrapher/share/ament_index/resource_index/packages
+[2.068s] copying package.xml -> /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_catorgrapher/share/lslidar_catorgrapher
+[2.068s] creating /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_catorgrapher/share/lslidar_catorgrapher/launch
+[2.068s] copying launch/catorgrapher_calc.py -> /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_catorgrapher/share/lslidar_catorgrapher/launch
+[2.068s] copying launch/catorgrapher_launch.py -> /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_catorgrapher/share/lslidar_catorgrapher/launch
+[2.069s] copying launch/catorgrapher_rviz.py -> /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_catorgrapher/share/lslidar_catorgrapher/launch
+[2.069s] creating /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_catorgrapher/share/lslidar_catorgrapher/config
+[2.069s] copying config/catorgrapher_rviz.rviz -> /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_catorgrapher/share/lslidar_catorgrapher/config
+[2.069s] copying config/catorgrapher_config.lua -> /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_catorgrapher/share/lslidar_catorgrapher/config
+[2.069s] copying config/catorgrapher_urdf.urdf -> /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_catorgrapher/share/lslidar_catorgrapher/config
+[2.069s] running install_egg_info
+[2.091s] Copying ../../../build/lslidar_catorgrapher/lslidar_catorgrapher.egg-info to /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_catorgrapher/lib/python3.12/site-packages/lslidar_catorgrapher-0.0.0-py3.12.egg-info
+[2.091s] running install_scripts
+[2.235s] writing list of installed files to '/home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/lslidar_catorgrapher/install.log'
+[2.278s] Invoked command in '/home/yht/SLAM_2D_Learn/SLAM_2D_Learn/src/Lslidar_ROS2_main/lslidar_catorgrapher' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/lslidar_catorgrapher/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/yht/SLAM_2D_Learn/SLAM_2D_Learn/install/lslidar_catorgrapher/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../../build/lslidar_catorgrapher build --build-base /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/lslidar_catorgrapher/build install --record /home/yht/SLAM_2D_Learn/SLAM_2D_Learn/build/lslidar_catorgrapher/install.log --single-version-externally-managed install_data
