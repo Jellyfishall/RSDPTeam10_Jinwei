@@ -1,7 +1,0 @@
-Metadata-Version: 2.1
-Name: lslidar-catorgrapher
-Version: 0.0.0
-Summary: Cartographer launch/config package for Leo Rover with RPLIDAR A2M12
-Maintainer: nzh
-Maintainer-email: nzh@todo.todo
-License: Apache License 2.0
