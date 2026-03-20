@@ -97,8 +97,13 @@ def spawn_robot(context: LaunchContext, namespace: LaunchConfiguration):
             robot_ns + "/odom@nav_msgs/msg/Odometry[gz.msgs.Odometry",
             robot_ns + "/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V",
             robot_ns + "/imu/data_raw@sensor_msgs/msg/Imu[gz.msgs.IMU",
+            robot_ns + "/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan",
             robot_ns
             + "/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
+            robot_ns + "/depth_camera/image@sensor_msgs/msg/Image[gz.msgs.Image",
+            robot_ns + "/depth_camera/depth_image@sensor_msgs/msg/Image[gz.msgs.Image",
+            robot_ns
+            + "/depth_camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
             robot_ns + "/joint_states@sensor_msgs/msg/JointState[gz.msgs.Model",
         ],
         parameters=[
