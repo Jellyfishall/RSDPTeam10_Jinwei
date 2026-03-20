@@ -38,3 +38,18 @@ The sim exposes stub modules which do basic actions - like a vision stub which g
 ```
 
 Check the launch file for the full list of launch arguments.
+
+## Launch the robot for autonomous exploration and mapping
+First, synchronize the robot’s internal clock with the computer (or NUC) clock:
+```bash
+>ssh pi@10.0.0.1
+```
+password:raspberry
+```bash
+sudo date -u -s "2026-02-20 12:15:00"
+```
+Change to the current time.
+Open a terminal in the SLAM_2D_Learn folder
+```bash
+source install setup.bash
+ros2 launch leo_explore auto_slam_wander.launch.py    #Launch the leo rover for autonomous exploration and mapping
