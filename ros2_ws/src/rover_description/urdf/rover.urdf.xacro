@@ -4,7 +4,7 @@
   <xacro:arg name="fixed" default="false"/>
   <xacro:arg name="robot_ns" default=""/>
   <xacro:arg name="mecanum_wheels" default="false"/>
-  <xacro:arg name="lidar_xyz" default="0.1 0 0.15"/>
+  <xacro:arg name="lidar_xyz" default="0.0700 0 0.0380"/>
   <xacro:arg name="lidar_rpy" default="0 0 0"/>
   <xacro:arg name="depth_camera_xyz" default="0.1746 0 0.0906"/>
   <xacro:arg name="depth_camera_rpy" default="0 0.4712 0"/>
@@ -39,11 +39,8 @@
   <link name="${link_prefix}lidar_link">
     <visual>
       <geometry>
-        <cylinder radius="0.05" length="0.05"/>
+        <mesh filename="package://rover_description/meshes/lidar.stl" scale="0.001 0.001 0.001"/>
       </geometry>
-      <material name="black">
-        <color rgba="0 0 0 1"/>
-      </material>
     </visual>
   </link>
 
