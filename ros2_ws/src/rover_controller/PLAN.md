@@ -34,7 +34,8 @@
 - When we run the longer-term policy, the rover ends up in the wrong location. Is that because, even in sim, /odom drifts? Or what else could be going on? How could I visualise it? What are the positions relative to? Would this be a problem if I'm maintaining things in the map frame?
 
 # NEXT STEPS
-NEXT: sim? something idk? Maybe more stuff on frames and tf transforms?
+NEXT: Merge sim + Mike new description
+NEXT: Add Haotian's code
 
 - Q - is it time to start working on the visualisation setup in rviz?
-- IDEA - if the smoothing node finds a new node far from an old one with the same colour as another one, overwrite it - may be able handle the SLAM drift
+- IDEA - if the smoothing node finds a new node far from an old one with the same colour as another one, overwrite it - may be able handle the SLAM drifts
