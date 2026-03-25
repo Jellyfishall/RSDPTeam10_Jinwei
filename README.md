@@ -17,6 +17,7 @@ A quick explainer of the individual packages is given below. Contributors should
 - `rover_interface` Defines the messages and actions used by other packages.
 - `rover_controller` Defines a finite state machine which tracks mission progress and executes the main plan.
 - `rover_decription` Defines a modularised URDF of the team robot to be used in both sim and for real transform tree.
+- `rsdp_perception` Implements the computer vision sensing logic, using a DepthCamera. To run this node you need to follow some more installation steps - take a look at the vision README at `ros2_ws/src/rsdp_perception/README.md`
 
 ## Running the Simulator
 To run the sim, you need to export a shell variable so ROS knows where to find the models. You can also add the export to your `.bashrc` or `.zshrc` so you don't need to re-run it. I'm sure there's a better way to do this automatically, but I don't know how to do it. We also install the leo package which provides the Leo Rover description
@@ -53,4 +54,10 @@ There are a number of packages, not included in the repository which our custom 
 > vcs import src < src/warehouse_ros_mongo.repos
 > sudo apt-get update && rosdep install --from-paths src --ignore-src -r -y --skip-keys="python-tk python-numpy"
 > sudo apt-get python3-tk python3-numpy
+## Running the vision node
+The vision node requires various installs to run. Check out the full instructions in the README at `ros2_ws/src/rsdp_perception/README.md`.
+
+After all the required installs, you can launch the node + Realsense camera with 
+```bash
+ros2 launch rsdp_perception vision.launch.py
 ```
