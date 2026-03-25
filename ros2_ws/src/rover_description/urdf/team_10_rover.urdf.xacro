@@ -68,7 +68,8 @@
     <gazebo reference="lidar_link">
       <sensor name="rplidar_a2m12" type="gpu_lidar">
         <always_on>true</always_on>
-        <visualize>true</visualize> <update_rate>10.0</update_rate>
+        <visualize>true</visualize> 
+        <update_rate>10.0</update_rate>
         <topic>scan</topic>
         <gz_frame_id>lidar_link</gz_frame_id>
         <ray>

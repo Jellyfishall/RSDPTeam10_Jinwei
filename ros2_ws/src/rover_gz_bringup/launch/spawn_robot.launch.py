@@ -40,7 +40,7 @@ def spawn_robot(context: LaunchContext, namespace: LaunchConfiguration):
             "urdf",
             "team_10_rover.urdf.xacro",
         ),
-        mappings={"use_gazebo": "true"},
+        mappings={"use_gazebo": "true", "robot_ns": robot_ns},
     )
 
     if robot_ns == "":
