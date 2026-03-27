@@ -30,7 +30,7 @@
   For now use this 
 ```bash
 ros2 topic pub /cv/bin_poses rover_interface/msg/BinPoseObservation "{
-  header: {frame_id: '/map'}, 
+  header: {frame_id: 'map'}, 
   yolo_fps: 30.0, 
   observations: [
     {
@@ -42,6 +42,11 @@ ros2 topic pub /cv/bin_poses rover_interface/msg/BinPoseObservation "{
       id: 2, 
       pose: {position: {x: -1.2, y: 0.55, z: 0.0}, orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}}, 
       color: 2
+    },
+    {
+      id: 3, 
+      pose: {position: {x: -1.2, y: -0.55, z: 0.0}, orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}}, 
+      color: 1
     }
   ]
 }" -1

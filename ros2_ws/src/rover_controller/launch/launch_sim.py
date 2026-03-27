@@ -34,7 +34,10 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(
             os.path.join(pkg_bringup, "launch", "rover_sim.launch.py")
         ),
-        launch_arguments={"robot_ns": robot_ns}.items(),
+        launch_arguments={
+            "robot_ns": robot_ns,
+            "headless": LaunchConfiguration("headless"),
+        }.items(),
     )
 
     slam_launch = IncludeLaunchDescription(
@@ -52,6 +55,11 @@ def generate_launch_description():
         "robot_ns",
         default_value="",
         description="Robot namespace for the Gazebo sim and fallback joint publishers.",
+    )
+    headless_arg = DeclareLaunchArgument(
+        "headless",
+        default_value="false",
+        description="Launch Gazebo without the GUI while keeping sensor rendering available.",
     )
 
     run_vision_stub_arg = DeclareLaunchArgument(
@@ -180,6 +188,7 @@ def generate_launch_description():
     return LaunchDescription(
         [
             robot_ns_arg,
+            headless_arg,
             run_vision_stub_arg,
             run_vision_true_arg,
             run_navigation_stub_arg,
