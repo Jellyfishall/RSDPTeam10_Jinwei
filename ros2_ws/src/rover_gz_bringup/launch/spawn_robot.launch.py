@@ -112,6 +112,7 @@ def spawn_robot(context: LaunchContext, namespace: LaunchConfiguration):
         output="screen",
     )
 
+    # Depth Cam RGB image bridge
     depth_cam_rgb = Node(
         package="ros_gz_image",
         executable="image_bridge",
@@ -120,6 +121,7 @@ def spawn_robot(context: LaunchContext, namespace: LaunchConfiguration):
         output="screen",
     )
 
+    # Depth Cam Depth image bridge
     depth_cam_depth = Node(
         package="ros_gz_image",
         executable="image_bridge",
@@ -127,6 +129,7 @@ def spawn_robot(context: LaunchContext, namespace: LaunchConfiguration):
         arguments=[robot_ns + "/depth_camera/depth_image"],
         output="screen",
     )
+
 
     return [
         robot_state_publisher,
