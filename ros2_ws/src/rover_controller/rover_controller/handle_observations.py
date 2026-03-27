@@ -88,7 +88,7 @@ class AggregateObservations(Node):
 
     def publish_smoothed_block_array(self):
         if self.block_poses is None:
-            self.get_logger().info("No known block positions to publish")
+            # self.get_logger().info("No known block positions to publish")
             return
 
         msg = BlockPoseSmoothedArray()
