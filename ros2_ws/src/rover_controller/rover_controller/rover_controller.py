@@ -191,7 +191,7 @@ class ControllerNode(Node):
             self.state = Phase.ApproachBlock.EXECUTE_NAV
             return
         # Otherwise - begin executing an ExploreMove
-        self.get_logger().info("Pretending to explore")
+        # self.get_logger().info("Pretending to explore")
         return
 
     def block_pose_callback(self, msg: BlockPoseSmoothedArray):
@@ -397,9 +397,7 @@ class ControllerNode(Node):
         self.get_logger().info(
             f"Manipulation result {status}: message='{result.message}'"
         )
-        self._handle_manipulation_result(
-            success=result.success, message=result.message
-        )
+        self._handle_manipulation_result(success=result.success, message=result.message)
 
     def _handle_manipulation_result(self, success: bool, message: str):
         operation = self.manip_goal_operation
