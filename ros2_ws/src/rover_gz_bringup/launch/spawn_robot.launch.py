@@ -31,24 +31,15 @@ from launch_ros.actions import Node
 
 
 def spawn_robot(context: LaunchContext, namespace: LaunchConfiguration):
-    pkg_project_description = get_package_share_directory("leo_description")
     robot_ns = context.perform_substitution(namespace)
 
-    # robot_desc = xacro.process(
-    #     os.path.join(
-    #         pkg_project_description,
-    #         "urdf",
-    #         "leo_sim.urdf.xacro",
-    #     ),
-    #     mappings={"robot_ns": robot_ns},
-    # )
     robot_desc = xacro.process(
         os.path.join(
             get_package_share_directory("rover_description"),
             "urdf",
-            "rover.urdf.xacro",
+            "team_10_rover.urdf.xacro",
         ),
-        mappings={"robot_ns": robot_ns},
+        mappings={"use_gazebo": "true", "robot_ns": robot_ns},
     )
 
     if robot_ns == "":
@@ -100,8 +91,6 @@ def spawn_robot(context: LaunchContext, namespace: LaunchConfiguration):
             robot_ns + "/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan",
             robot_ns
             + "/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
-            robot_ns + "/depth_camera/image@sensor_msgs/msg/Image[gz.msgs.Image",
-            robot_ns + "/depth_camera/depth_image@sensor_msgs/msg/Image[gz.msgs.Image",
             robot_ns
             + "/depth_camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
             robot_ns + "/joint_states@sensor_msgs/msg/JointState[gz.msgs.Model",
@@ -118,15 +107,34 @@ def spawn_robot(context: LaunchContext, namespace: LaunchConfiguration):
     image_bridge = Node(
         package="ros_gz_image",
         executable="image_bridge",
-        name=node_name_prefix + "image_bridge",
+        name=node_name_prefix + "leo_image_bridge",
         arguments=[robot_ns + "/camera/image_raw"],
         output="screen",
     )
+
+    depth_cam_rgb = Node(
+        package="ros_gz_image",
+        executable="image_bridge",
+        name=node_name_prefix + "depth_rgb_bridge",
+        arguments=[robot_ns + "/depth_camera/image"],
+        output="screen",
+    )
+
+    depth_cam_depth = Node(
+        package="ros_gz_image",
+        executable="image_bridge",
+        name=node_name_prefix + "depth_depth_bridge",
+        arguments=[robot_ns + "/depth_camera/depth_image"],
+        output="screen",
+    )
+
     return [
         robot_state_publisher,
         leo_rover,
         topic_bridge,
         image_bridge,
+        depth_cam_rgb,
+        depth_cam_depth,
     ]
 
 
