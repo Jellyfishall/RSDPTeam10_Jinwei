@@ -74,7 +74,7 @@ def spawn_robot(context: LaunchContext, namespace: LaunchConfiguration):
             "-name",
             robot_gazebo_name,
             "-z",
-            "1.65",
+            "0.65",
         ],
     )
 
@@ -129,7 +129,6 @@ def spawn_robot(context: LaunchContext, namespace: LaunchConfiguration):
         arguments=[robot_ns + "/depth_camera/depth_image"],
         output="screen",
     )
-
 
     return [
         robot_state_publisher,
