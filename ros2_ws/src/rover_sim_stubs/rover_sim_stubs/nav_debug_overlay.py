@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 import math
 from typing import Dict, Iterable, Optional, Tuple
 
@@ -15,6 +16,14 @@ from rover_interface.msg import (
     BlockPoseSmoothedArray,
 )
 from visualization_msgs.msg import Marker, MarkerArray
+
+
+@dataclass
+class RawObservation:
+    color_value: int
+    detection_id: int
+    frame_id: str
+    point: Point
 
 
 class NavDebugOverlay(Node):
@@ -41,8 +50,8 @@ class NavDebugOverlay(Node):
         self.current_pose: Optional[tuple[float, float, float]] = None
         self.controller_blocks: list[BlockPoseSmoothed] = []
         self.controller_bins: list[BinPoseSmoothed] = []
-        self.raw_block_obs: Dict[int, BlockPoseObservation] = {}
-        self.raw_bin_obs: Dict[int, BinPoseObservation] = {}
+        self.raw_block_obs: Dict[Tuple[int, int, int], RawObservation] = {}
+        self.raw_bin_obs: Dict[Tuple[int, int, int], RawObservation] = {}
         self.rover_trail: list[Point] = []
 
         self._warned_frame_sources: set[Tuple[str, str]] = set()
@@ -146,20 +155,40 @@ class NavDebugOverlay(Node):
             )
 
     def raw_block_callback(self, msg: BlockPoseObservation):
-        color_value = int(msg.color.color)
-        self.raw_block_obs[color_value] = msg
         self._warn_on_frame_mismatch(
             source="cv/block_poses",
-            frame_id=msg.position.header.frame_id,
+            frame_id=msg.header.frame_id,
         )
+        for index, observation in enumerate(msg.observations):
+            marker_key = (int(observation.color), int(observation.id), index)
+            self.raw_block_obs[marker_key] = RawObservation(
+                color_value=int(observation.color),
+                detection_id=int(observation.id),
+                frame_id=msg.header.frame_id,
+                point=self._point(
+                    observation.pose.position.x,
+                    observation.pose.position.y,
+                    observation.pose.position.z,
+                ),
+            )
 
     def raw_bin_callback(self, msg: BinPoseObservation):
-        color_value = int(msg.color.color)
-        self.raw_bin_obs[color_value] = msg
         self._warn_on_frame_mismatch(
             source="cv/bin_poses",
-            frame_id=msg.position.header.frame_id,
+            frame_id=msg.header.frame_id,
         )
+        for index, observation in enumerate(msg.observations):
+            marker_key = (int(observation.color), int(observation.id), index)
+            self.raw_bin_obs[marker_key] = RawObservation(
+                color_value=int(observation.color),
+                detection_id=int(observation.id),
+                frame_id=msg.header.frame_id,
+                point=self._point(
+                    observation.pose.position.x,
+                    observation.pose.position.y,
+                    observation.pose.position.z,
+                ),
+            )
 
     def publish_markers(self):
         markers = MarkerArray()
@@ -322,9 +351,9 @@ class NavDebugOverlay(Node):
 
     def _raw_markers_for_bins(self) -> list[Marker]:
         markers: list[Marker] = []
-        for index, (color_value, msg) in enumerate(sorted(self.raw_bin_obs.items())):
-            point = msg.position.point
-            rgba = self._color_rgba(color_value, alpha=0.35)
+        for index, (_, observation) in enumerate(sorted(self.raw_bin_obs.items())):
+            point = observation.point
+            rgba = self._color_rgba(observation.color_value, alpha=0.35)
             markers.append(
                 self._shape_marker(
                     namespace="raw_bin",
@@ -342,8 +371,9 @@ class NavDebugOverlay(Node):
                     point=point,
                     rgba=rgba,
                     text=(
-                        f"cv bin {self._color_name(color_value)}\n"
-                        f"src frame='{msg.position.header.frame_id}'\n"
+                        f"cv bin {self._color_name(observation.color_value)}\n"
+                        f"id={observation.detection_id}\n"
+                        f"src frame='{observation.frame_id}'\n"
                         f"shown as {self.marker_frame}\n"
                         f"({point.x:.2f}, {point.y:.2f})"
                     ),
@@ -353,9 +383,9 @@ class NavDebugOverlay(Node):
 
     def _raw_markers_for_blocks(self) -> list[Marker]:
         markers: list[Marker] = []
-        for index, (color_value, msg) in enumerate(sorted(self.raw_block_obs.items())):
-            point = msg.position.point
-            rgba = self._color_rgba(color_value, alpha=0.35)
+        for index, (_, observation) in enumerate(sorted(self.raw_block_obs.items())):
+            point = observation.point
+            rgba = self._color_rgba(observation.color_value, alpha=0.35)
             markers.append(
                 self._shape_marker(
                     namespace="raw_block",
@@ -373,8 +403,9 @@ class NavDebugOverlay(Node):
                     point=point,
                     rgba=rgba,
                     text=(
-                        f"cv block {self._color_name(color_value)}\n"
-                        f"src frame='{msg.position.header.frame_id}'\n"
+                        f"cv block {self._color_name(observation.color_value)}\n"
+                        f"id={observation.detection_id}\n"
+                        f"src frame='{observation.frame_id}'\n"
                         f"shown as {self.marker_frame}\n"
                         f"({point.x:.2f}, {point.y:.2f})"
                     ),

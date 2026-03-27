@@ -4,9 +4,11 @@ from geometry_msgs.msg import Point, PointStamped
 from rclpy.node import Node
 
 from rover_interface.msg import (
+    BinPose,
     BinPoseObservation,
     BinPoseSmoothed,
     BinPoseSmoothedArray,
+    BlockPose,
     BlockBinColor,
     BlockPoseObservation,
     BlockPoseSmoothed,
@@ -46,7 +48,7 @@ class AggregateObservations(Node):
         )
 
         self.block_poses: np.ndarray | None = None
-        self.block_colors: list[BlockBinColor] = []
+        self.block_colors: list[int] = []
         self.block_frame_id = "map"
 
         self.block_pub_topic = "/controller/block_poses"
@@ -66,7 +68,7 @@ class AggregateObservations(Node):
             qos_profile=1,
         )
         self.bin_poses: np.ndarray | None = None
-        self.bin_colors: list[BlockBinColor] = []
+        self.bin_colors: list[int] = []
         self.bin_frame_id = "map"
 
         self.bin_pub_topic = "/controller/bin_poses"
@@ -106,7 +108,7 @@ class AggregateObservations(Node):
             block.shape.shape = BlockShape.CUBE
 
             block.color = BlockBinColor()
-            block.color.color = self.block_colors[i].color
+            block.color.color = self.block_colors[i]
 
             msg.blocks.append(block)  # type:ignore
 
@@ -117,21 +119,29 @@ class AggregateObservations(Node):
         return 0.95 * current + 0.05 * new
 
     def observe_block(self, msg: BlockPoseObservation):
-        self.block_frame_id = msg.position.header.frame_id or self.block_frame_id
+        self.block_frame_id = msg.header.frame_id or self.block_frame_id
+        for observation in msg.observations:
+            self.observe_block_detection(observation)
+
+    def observe_block_detection(self, observation: BlockPose):
         pos = np.array(
-            [msg.position.point.x, msg.position.point.y, msg.position.point.z]
+            [
+                observation.pose.position.x,
+                observation.pose.position.y,
+                observation.pose.position.z,
+            ]
         )
 
         if self.block_poses is None:
             self.block_poses = pos[np.newaxis, :]  # Shape (1, 3)
-            self.block_colors.append(msg.color)
+            self.block_colors.append(int(observation.color))
             return
 
         idx, is_distinct = self.compare_blocks(pos)
 
         if is_distinct:
             self.block_poses = np.vstack([self.block_poses, pos])
-            self.block_colors.append(msg.color)
+            self.block_colors.append(int(observation.color))
         else:
             self.block_poses[idx] = self.update_pose_estimate(
                 self.block_poses[idx], pos
@@ -160,28 +170,36 @@ class AggregateObservations(Node):
             bin_pose.position.point = Point(x=pose[0], y=pose[1], z=pose[2])
 
             bin_pose.color = BlockBinColor()
-            bin_pose.color.color = self.bin_colors[i].color
+            bin_pose.color.color = self.bin_colors[i]
 
             msg.bins.append(bin_pose)  # type:ignore
 
         self.bin_pub.publish(msg=msg)
 
     def observe_bin(self, msg: BinPoseObservation):
-        self.bin_frame_id = msg.position.header.frame_id or self.bin_frame_id
+        self.bin_frame_id = msg.header.frame_id or self.bin_frame_id
+        for observation in msg.observations:
+            self.observe_bin_detection(observation)
+
+    def observe_bin_detection(self, observation: BinPose):
         pos = np.array(
-            [msg.position.point.x, msg.position.point.y, msg.position.point.z]
+            [
+                observation.pose.position.x,
+                observation.pose.position.y,
+                observation.pose.position.z,
+            ]
         )
 
         if self.bin_poses is None:
             self.bin_poses = pos[np.newaxis, :]  # Shape (1, 3)
-            self.bin_colors.append(msg.color)
+            self.bin_colors.append(int(observation.color))
             return
 
         idx, is_distinct = self.compare_bins(pos)
 
         if is_distinct:
             self.bin_poses = np.vstack([self.bin_poses, pos])
-            self.bin_colors.append(msg.color)
+            self.bin_colors.append(int(observation.color))
         else:
             self.bin_poses[idx] = self.update_pose_estimate(self.bin_poses[idx], pos)
 
