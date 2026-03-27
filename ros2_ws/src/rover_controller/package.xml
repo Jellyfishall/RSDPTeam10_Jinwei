@@ -20,6 +20,7 @@
   <depend>rover_gz_bringup</depend>
   <depend>rover_interface</depend>
   <depend>rover_sim_stubs</depend>
+  <depend>sensor_msgs</depend>
   <export>
     <build_type>ament_python</build_type>
   </export>

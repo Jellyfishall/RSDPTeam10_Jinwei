@@ -1,7 +1,6 @@
 import os
 
 from ament_index_python.packages import get_package_share_directory
-
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.conditions import IfCondition
 from launch.launch_description import LaunchDescription
@@ -12,11 +11,31 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     pkg_bringup = get_package_share_directory("rover_gz_bringup")
+    pkg_slam = get_package_share_directory("rover_slam")
+    robot_ns = LaunchConfiguration("robot_ns")
 
     rover_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(pkg_bringup, "launch", "rover_sim.launch.py")
-        )
+        ),
+        launch_arguments={"robot_ns": robot_ns}.items(),
+    )
+
+    slam_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(pkg_slam, "launch", "slam_launch.py")
+        ),
+        launch_arguments={
+            "launch_rviz": "false",
+            "launch_rplidar": "false",
+        }.items(),
+        condition=IfCondition(LaunchConfiguration("run_slam_node")),
+    )
+
+    robot_ns_arg = DeclareLaunchArgument(
+        "robot_ns",
+        default_value="",
+        description="Robot namespace for the Gazebo sim and fallback joint publishers.",
     )
 
     run_vision_stub_arg = DeclareLaunchArgument(
@@ -49,7 +68,17 @@ def generate_launch_description():
         default_value="false",
         description="Run rover_sim_stubs nav_debug_overlay node",
     )
+    run_arm_joint_state_fallback_arg = DeclareLaunchArgument(
+        "run_arm_joint_state_fallback",
+        default_value="true",
+        description="Publish fallback arm joint states for sim when no real arm stack is running.",
+    )
 
+    run_slam_node_arg = DeclareLaunchArgument(
+        "run_slam_node",
+        default_value="true",
+        description="run rover_slam to convert mocked /scan to /map.",
+    )
     vision_stub = Node(
         package="rover_sim_stubs",
         executable="vision_stub",
@@ -92,20 +121,35 @@ def generate_launch_description():
         condition=IfCondition(LaunchConfiguration("run_nav_debug_overlay")),
     )
 
+    arm_joint_state_fallback = Node(
+        namespace=robot_ns,
+        package="rover_controller",
+        executable="sim_arm_joint_state_publisher",
+        name="sim_arm_joint_state_publisher",
+        output="screen",
+        parameters=[{"use_sim_time": True}],
+        condition=IfCondition(LaunchConfiguration("run_arm_joint_state_fallback")),
+    )
+
     return LaunchDescription(
         [
+            robot_ns_arg,
             run_vision_stub_arg,
             run_navigation_stub_arg,
             run_manipulation_stub_arg,
             run_smooth_observations_arg,
             run_rover_controller_arg,
             run_nav_debug_overlay_arg,
+            run_arm_joint_state_fallback_arg,
+            run_slam_node_arg,
             rover_sim,
+            slam_launch,
             vision_stub,
             navigation_stub,
             manipulation_stub,
             smooth_observations,
             rover_controller,
             nav_debug_overlay,
+            arm_joint_state_fallback,
         ]
     )
