@@ -149,6 +149,7 @@ def generate_launch_description():
         package="rover_controller",
         executable="smooth_observations",
         output="screen",
+        parameters=[{"use_sim_time": True}],
         condition=IfCondition(LaunchConfiguration("run_smooth_observations")),
     )
 

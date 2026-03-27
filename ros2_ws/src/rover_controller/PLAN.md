@@ -26,6 +26,26 @@
 ~11. Add obstacles to the map~ (Mike handling)
 ~12. Update sim to use Jinwei message definitions~
 ~13. Test new rover model in sim.~
+14. In sim, the vision node only recognises blocks, not bins
+  For now use this 
+```bash
+ros2 topic pub /cv/bin_poses rover_interface/msg/BinPoseObservation "{
+  header: {frame_id: '/map'}, 
+  yolo_fps: 30.0, 
+  observations: [
+    {
+      id: 1, 
+      pose: {position: {x: -1.2, y: 0.0, z: 0.0}, orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}}, 
+      color: 3
+    }, 
+    {
+      id: 2, 
+      pose: {position: {x: -1.2, y: 0.55, z: 0.0}, orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}}, 
+      color: 2
+    }
+  ]
+}" -1
+```
 
 # TODOs in the code 
 

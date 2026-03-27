@@ -161,9 +161,9 @@ class ControllerNode(Node):
         for attr in self.__dict__.values():
             if isinstance(attr, ActionClient):
                 if not attr.server_is_ready():
-                    self.get_logger().info(
-                        f"Waiting for action server {attr._action_name}..."
-                    )
+                    # self.get_logger().info(
+                    #     f"Waiting for action server {attr._action_name}..."
+                    # )
                     return
 
         self.get_logger().info("All interfaces ready, progressing to bin observation.")
