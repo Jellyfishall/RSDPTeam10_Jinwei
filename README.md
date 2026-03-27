@@ -41,6 +41,20 @@ The sim exposes stub modules which do basic actions - like a vision stub which g
 
 Check the launch file for the full list of launch arguments.
 
+## Launch the SLAM Node
+The SLAM Node consumes a laser scan to produce a map on the `/map` topic. You can run the node itself by running 
+```bash
+ros2 launch rover_slam launch_slam.py
+```
+
+To also launch `rviz` and the real-world lidar (check permissions below) along it, specify the launch arguments
+```bash
+ros2 launch rover_slam slam_launch.py launch_rviz:=true launch_rplidar:=true
+```
+
+To run the RPLidar A2M12 (ie. the real lidar) you need to set the permissions so the computer can communicate with it using this command.
+```bash
+sudo chmod 777 /dev/ttyUSB0
 ## Required ROS2 Package Installation
 There are a number of packages, not included in the repository which our custom packages rely on. These are listed as follows:
 
