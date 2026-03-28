@@ -29,6 +29,7 @@ import os
 from ament_index_python.packages import get_package_share_directory
 from launch.actions import AppendEnvironmentVariable
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.conditions import IfCondition, UnlessCondition
 from launch.launch_description import LaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
@@ -71,12 +72,29 @@ def generate_launch_description():
         description="Robot namespace",
     )
 
+    headless = DeclareLaunchArgument(
+        "headless",
+        default_value="false",
+        description="Launch Gazebo without the GUI and use headless rendering.",
+    )
+
     # Setup to launch the simulator and Gazebo world
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(pkg_ros_gz_sim, "launch", "gz_sim.launch.py")
         ),
         launch_arguments={"gz_args": LaunchConfiguration("sim_world")}.items(),
+        condition=UnlessCondition(LaunchConfiguration("headless")),
+    )
+
+    gz_sim_headless = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(pkg_ros_gz_sim, "launch", "gz_sim.launch.py")
+        ),
+        launch_arguments={
+            "gz_args": ["-r -s --headless-rendering ", LaunchConfiguration("sim_world")]
+        }.items(),
+        condition=IfCondition(LaunchConfiguration("headless")),
     )
 
     spawn_robot = IncludeLaunchDescription(
@@ -127,7 +145,9 @@ def generate_launch_description():
         ), 
             sim_world,
             robot_ns,
+            headless,
             gz_sim,
+            gz_sim_headless,
             spawn_robot,
             topic_bridge,
         ]
