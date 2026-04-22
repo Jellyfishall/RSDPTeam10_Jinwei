@@ -31,10 +31,10 @@ def generate_launch_description():
             DeclareLaunchArgument("align_depth.enable", default_value="true"),
             DeclareLaunchArgument("enable_sync", default_value="true"),
             DeclareLaunchArgument("run_realsense_node", default_value="true"),
-            DeclareLaunchArgument("conf", default_value="0.25"),
+            DeclareLaunchArgument("conf", default_value="0.50"),
             DeclareLaunchArgument("min_attr_conf", default_value="0.20"),
             DeclareLaunchArgument("vote_window", default_value="10"),
-            DeclareLaunchArgument("min_votes_to_output", default_value="3"),
+            DeclareLaunchArgument("min_votes_to_output", default_value="5"),
             DeclareLaunchArgument(
                 "color_topic", default_value="/camera/camera/color/image_raw"
             ),
