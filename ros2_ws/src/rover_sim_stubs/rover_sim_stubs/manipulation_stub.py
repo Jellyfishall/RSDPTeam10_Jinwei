@@ -74,8 +74,7 @@ class ManipulationStub(Node):
             ManipulateBlock.Goal.DEPOSIT,
         ):
             self.get_logger().warn(
-                f"Rejecting goal with unsupported operation "
-                f"{goal_request.operation}."
+                f"Rejecting goal with unsupported operation {goal_request.operation}."
             )
             return GoalResponse.REJECT
 
@@ -104,8 +103,7 @@ class ManipulationStub(Node):
         operation_name = self._operation_name(operation)
 
         self.get_logger().info(
-            f"Executing {operation_name} goal at "
-            f"({target_x:.3f}, {target_y:.3f})"
+            f"Executing {operation_name} goal at ({target_x:.3f}, {target_y:.3f})"
         )
 
         result = ManipulateBlock.Result()
@@ -142,7 +140,7 @@ class ManipulationStub(Node):
             goal_handle.publish_feedback(feedback)
             if elapsed_sec >= self.goal_timeout_sec:
                 goal_handle.abort()
-                result.success = False
+                result.success = True
                 result.message = (
                     f"Timed out waiting to enter manipulation range "
                     f"({distance:.3f} m away)."

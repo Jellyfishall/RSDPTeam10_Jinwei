@@ -1,13 +1,18 @@
 from enum import Enum, auto
 
-from geometry_msgs.msg import PointStamped, PoseStamped
 import rclpy
+from geometry_msgs.msg import PointStamped, PoseStamped
 from rclpy.action.client import ActionClient
 from rclpy.duration import Duration
 from rclpy.node import Node
 from rclpy.time import Time
 from tf2_ros import Buffer, TransformException, TransformListener
 
+from rover_controller.navigation_goals import (
+    compute_standoff_pose,
+    quaternion_to_yaw,
+    yaw_to_quaternion,
+)
 from rover_interface.action import ManipulateBlock, NavigateToPos
 from rover_interface.msg import (
     BinPoseSmoothed,
@@ -15,12 +20,6 @@ from rover_interface.msg import (
     BlockBinColor,
     BlockPoseSmoothed,
     BlockPoseSmoothedArray,
-)
-
-from rover_controller.navigation_goals import (
-    compute_standoff_pose,
-    quaternion_to_yaw,
-    yaw_to_quaternion,
 )
 
 
@@ -77,7 +76,7 @@ class ControllerNode(Node):
             self.declare_parameter("robot_base_frame", "base_link").value
         )
         self.navigation_standoff_distance_m = float(
-            self.declare_parameter("navigation_standoff_distance_m", 0.6).value
+            self.declare_parameter("navigation_standoff_distance_m", 0.5).value
         )
         self.min_goal_vector_length_m = float(
             self.declare_parameter("min_goal_vector_length_m", 1e-3).value
