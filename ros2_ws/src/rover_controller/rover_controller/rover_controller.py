@@ -1,8 +1,12 @@
 from enum import Enum, auto
 
+from geometry_msgs.msg import PointStamped, PoseStamped
 import rclpy
 from rclpy.action.client import ActionClient
+from rclpy.duration import Duration
 from rclpy.node import Node
+from rclpy.time import Time
+from tf2_ros import Buffer, TransformException, TransformListener
 
 from rover_interface.action import ManipulateBlock, NavigateToPos
 from rover_interface.msg import (
@@ -11,6 +15,12 @@ from rover_interface.msg import (
     BlockBinColor,
     BlockPoseSmoothed,
     BlockPoseSmoothedArray,
+)
+
+from rover_controller.navigation_goals import (
+    compute_standoff_pose,
+    quaternion_to_yaw,
+    yaw_to_quaternion,
 )
 
 
@@ -61,6 +71,22 @@ class ControllerNode(Node):
         super().__init__("controller_node")
         self.state = Phase.StartUp.WAIT
         self.get_logger().info(f"Launching controller node with state {self.state=}")
+
+        self.map_frame = str(self.declare_parameter("map_frame", "map").value)
+        self.robot_base_frame = str(
+            self.declare_parameter("robot_base_frame", "base_link").value
+        )
+        self.navigation_standoff_distance_m = float(
+            self.declare_parameter("navigation_standoff_distance_m", 0.6).value
+        )
+        self.min_goal_vector_length_m = float(
+            self.declare_parameter("min_goal_vector_length_m", 1e-3).value
+        )
+        self.tf_lookup_timeout = Duration(
+            seconds=float(self.declare_parameter("tf_lookup_timeout_sec", 0.2).value)
+        )
+        self.tf_buffer = Buffer(node=self)
+        self.tf_listener = TransformListener(self.tf_buffer, self)
 
         block_topic = "/controller/block_poses"
         # Observation Management
@@ -233,14 +259,25 @@ class ControllerNode(Node):
             )
             return False
 
+        goal_pose = self._build_navigation_goal_pose(target.position)
+        if goal_pose is None:
+            return False
+
         goal = NavigateToPos.Goal()
-        goal.target_pos = target.position
+        goal.target_pose = goal_pose
 
         self.nav_goal_in_flight = True
-        # TODO(Alex) Make this specific to block/bin
+        goal_yaw = quaternion_to_yaw(
+            x=goal_pose.pose.orientation.x,
+            y=goal_pose.pose.orientation.y,
+            z=goal_pose.pose.orientation.z,
+            w=goal_pose.pose.orientation.w,
+        )
         self.get_logger().info(
-            f"Sending navigation goal for target "
-            f"at ({target.position.point.x:.2f}, {target.position.point.y:.2f})"
+            "Sending navigation goal for target "
+            f"at ({target.position.point.x:.2f}, {target.position.point.y:.2f}) "
+            f"via approach pose ({goal_pose.pose.position.x:.2f}, "
+            f"{goal_pose.pose.position.y:.2f}, yaw={goal_yaw:.2f} rad)"
         )
 
         goal_future = self.nav_action_client.send_goal_async(
@@ -249,6 +286,53 @@ class ControllerNode(Node):
         )
         goal_future.add_done_callback(self._nav_goal_response_callback)
         return True
+
+    def _build_navigation_goal_pose(
+        self, target_position: PointStamped
+    ) -> PoseStamped | None:
+        goal_frame = target_position.header.frame_id.strip() or self.map_frame
+        try:
+            robot_transform = self.tf_buffer.lookup_transform(
+                goal_frame,
+                self.robot_base_frame,
+                Time(),
+                timeout=self.tf_lookup_timeout,
+            )
+        except TransformException as exc:
+            self.get_logger().warning(
+                f"Cannot compute navigation approach pose in frame '{goal_frame}': {exc}"
+            )
+            return None
+
+        robot_x = float(robot_transform.transform.translation.x)
+        robot_y = float(robot_transform.transform.translation.y)
+        robot_yaw = quaternion_to_yaw(
+            x=float(robot_transform.transform.rotation.x),
+            y=float(robot_transform.transform.rotation.y),
+            z=float(robot_transform.transform.rotation.z),
+            w=float(robot_transform.transform.rotation.w),
+        )
+
+        approach_pose = compute_standoff_pose(
+            robot_x=robot_x,
+            robot_y=robot_y,
+            robot_yaw=robot_yaw,
+            target_x=float(target_position.point.x),
+            target_y=float(target_position.point.y),
+            stand_off_distance=self.navigation_standoff_distance_m,
+            min_goal_vector_length=self.min_goal_vector_length_m,
+        )
+        goal_qz, goal_qw = yaw_to_quaternion(approach_pose.yaw)
+
+        goal_pose = PoseStamped()
+        goal_pose.header.frame_id = goal_frame
+        goal_pose.header.stamp = self.get_clock().now().to_msg()
+        goal_pose.pose.position.x = float(approach_pose.x)
+        goal_pose.pose.position.y = float(approach_pose.y)
+        goal_pose.pose.position.z = 0.0
+        goal_pose.pose.orientation.z = float(goal_qz)
+        goal_pose.pose.orientation.w = float(goal_qw)
+        return goal_pose
 
     def _nav_feedback_callback(self, feedback_msg):
         dist = feedback_msg.feedback.distance_remaining

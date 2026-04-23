@@ -76,8 +76,8 @@ class NavigationStub(Node):
         )
 
     def goal_callback(self, goal_request: NavigateToPos.Goal):
-        frame_id = goal_request.target_pos.header.frame_id.strip()
-        target = goal_request.target_pos.point
+        frame_id = goal_request.target_pose.header.frame_id.strip() or self.goal_frame
+        target = goal_request.target_pose.pose.position
 
         if frame_id != self.goal_frame:
             self.get_logger().warn(
@@ -97,12 +97,20 @@ class NavigationStub(Node):
         return CancelResponse.ACCEPT
 
     def execute_callback(self, goal_handle):
-        target = goal_handle.request.target_pos.point
+        goal_pose = goal_handle.request.target_pose.pose
+        target = goal_pose.position
         target_x = float(target.x)
         target_y = float(target.y)
+        goal_yaw = self._yaw_from_quaternion(
+            goal_pose.orientation.x,
+            goal_pose.orientation.y,
+            goal_pose.orientation.z,
+            goal_pose.orientation.w,
+        )
 
         self.get_logger().info(
-            f"Executing navigate goal to target at ({target_x:.3f}, {target_y:.3f})"
+            "Executing navigate goal to target at "
+            f"({target_x:.3f}, {target_y:.3f}) with yaw {goal_yaw:.3f} rad"
         )
 
         result = NavigateToPos.Result()
@@ -131,11 +139,15 @@ class NavigationStub(Node):
             dx = target_x - x
             dy = target_y - y
             distance = math.hypot(dx, dy)
+            goal_yaw_error = self._normalize_angle(goal_yaw - yaw)
 
             feedback.distance_remaining = float(distance)
             goal_handle.publish_feedback(feedback)
 
-            if distance <= self.approach_threshold_m:
+            if (
+                distance <= self.approach_threshold_m
+                and abs(goal_yaw_error) <= self.heading_tolerance_rad
+            ):
                 self._publish_stop()
                 goal_handle.succeed()
                 result.success = True
@@ -152,8 +164,11 @@ class NavigationStub(Node):
                 result.message = "Timed out before reaching goal."
                 return result
 
-            target_heading = math.atan2(dy, dx)
-            heading_error = self._normalize_angle(target_heading - yaw)
+            if distance > self.approach_threshold_m:
+                desired_heading = math.atan2(dy, dx)
+            else:
+                desired_heading = goal_yaw
+            heading_error = self._normalize_angle(desired_heading - yaw)
 
             twist = Twist()
             twist.angular.z = self._clamp(

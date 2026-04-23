@@ -249,6 +249,15 @@ class NavigationServiceNode(Node):
 
         return self._nav2_ready
 
+    @staticmethod
+    def _quaternion_is_zero(orientation):
+        return (
+            orientation.x == 0.0
+            and orientation.y == 0.0
+            and orientation.z == 0.0
+            and orientation.w == 0.0
+        )
+
     def goal_callback(self, _goal_request):
         """Accept goals and gate execution inside execute_callback."""
         return GoalResponse.ACCEPT
@@ -276,8 +285,8 @@ class NavigationServiceNode(Node):
 
     async def execute_callback(self, goal_handle):
         """Execute a NavigateToPos goal through Nav2 once ready."""
-        request_point = goal_handle.request.target_pos
-        goal_frame = request_point.header.frame_id.strip() or self.map_frame
+        request_pose = goal_handle.request.target_pose
+        goal_frame = request_pose.header.frame_id.strip() or self.map_frame
         self.get_logger().info(
             'Received navigation action request '
             f"in frame '{goal_frame}'."
@@ -296,12 +305,17 @@ class NavigationServiceNode(Node):
                 return result
 
             goal_pose = PoseStamped()
+            goal_pose.header = request_pose.header
+            goal_pose.pose = request_pose.pose
             goal_pose.header.frame_id = goal_frame
             goal_pose.header.stamp = self.get_clock().now().to_msg()
-            goal_pose.pose.position.x = request_point.point.x
-            goal_pose.pose.position.y = request_point.point.y
             goal_pose.pose.position.z = 0.0
-            goal_pose.pose.orientation.w = 1.0
+            if self._quaternion_is_zero(goal_pose.pose.orientation):
+                self.get_logger().warning(
+                    'Received zero-length goal quaternion; defaulting to '
+                    'identity orientation.'
+                )
+                goal_pose.pose.orientation.w = 1.0
 
             if not self.navigator.goToPose(goal_pose):
                 result = NavigateToPos.Result()
